@@ -74,32 +74,32 @@ WSGI_APPLICATION = 'oyo_clone.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-from dotenv import load_dotenv
-import os
-env = load_dotenv()
-
-name = os.getenv('NAME')
-user = os.getenv('USER')    
-password = os.getenv('PASSWORD')
-print(name,user,password)
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('NAME'),
-        'USER': os.getenv('USER'),
-        'PASSWORD': os.getenv('PASSWORD'),
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# from dotenv import load_dotenv
+# import os
+# env = load_dotenv()
+
+# name = os.getenv('NAME')
+# user = os.getenv('USER')    
+# password = os.getenv('PASSWORD')
+# print(name,user,password)
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': os.getenv('NAME'),
+#         'USER': os.getenv('USER'),
+#         'PASSWORD': os.getenv('PASSWORD'),
+#         'HOST': '127.0.0.1',
+#         'PORT': '3306',
+#     }
+# }
 
 # CACHES = {
 #     "default": {
