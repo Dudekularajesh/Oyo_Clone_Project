@@ -1,0 +1,102 @@
+{% extends "utils/base.html" %}
+{% block start %}
+
+<style>
+    /* Modern Card */
+    .auth-card {
+        border: none;
+        border-radius: 15px;
+        padding: 30px;
+        background: #ffffff;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    label {
+        font-weight: 600;
+    }
+
+    .btn-custom {
+        width: 100%;
+        padding: 10px;
+        font-weight: 600;
+        border-radius: 30px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+    }
+
+    .login-container {
+        max-width: 450px;
+    }
+</style>
+
+<div class="container mt-5 pt-5 pb-5 d-flex justify-content-center">
+
+    <div class="login-container">
+
+        <div class="auth-card">
+
+            <h3 class="text-center mb-4">Login</h3>
+
+            <form method="POST">
+                {% csrf_token %}
+                {% include "utils/alerts.html" %}
+
+                <!-- Email -->
+                <div class="mb-3">
+                    <label class="form-label">Email Address</label>
+                    <input 
+                        id="email"
+                        type="email"
+                        name="email"
+                        class="form-control"
+                        placeholder="Enter your email">
+                    <small class="form-text text-muted">
+                        We'll never share your email with anyone.
+                    </small>
+                </div>
+
+                <!-- Password -->
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input 
+                        type="password" 
+                        name="password" 
+                        class="form-control"
+                        placeholder="Enter your password">
+                </div>
+
+                <!-- Normal Login -->
+                <button type="submit" class="btn btn-primary btn-custom mt-2">
+                    Login
+                </button>
+
+                <!-- OTP Login -->
+                <button type="button" onclick="sendOtp()" class="btn btn-success btn-custom mt-3">
+                    Login with OTP
+                </button>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function sendOtp(){
+    var email = document.getElementById('email').value;
+
+    if(email.trim() === ""){
+        alert("Please enter your email first.");
+        return;
+    }
+
+    window.location.href = `/accounts/send_otp/${email}/`;
+}
+</script>
+
+{% endblock %}

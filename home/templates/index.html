@@ -1,0 +1,119 @@
+{% extends "utils/base.html" %}
+{% block start %}
+{% load static %}
+
+<style>
+    /* ======= CARD HOVER EFFECT ======= */
+    .hotel-card {
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    .hotel-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+    /* ======= IMAGE FIX ======= */
+    .hotel-img {
+        height: 180px;
+        width: 100%;
+        object-fit: cover;
+        border-bottom: 1px solid #eee;
+    }
+
+    /* ======= PRICE STYLE ======= */
+    .price-box span {
+        font-size: 14px;
+    }
+
+    /* ======= SEARCH SECTION ======= */
+    .search-box {
+        background: #fff;
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+</style>
+
+<div class="container mt-5 pb-5">
+
+    <!-- =========================
+         SEARCH + SORT ROW
+    ========================== -->
+    <div class="col-lg-6 col-md-8 col-sm-12 mx-auto mb-4">
+        <form class="search-box d-flex flex-column flex-md-row gap-2" method="GET">
+            <input 
+                type="text" 
+                name="search" 
+                class="form-control" 
+                placeholder="Search hotels..."
+            >
+
+            <select class="form-control" name="sort_by">
+                <option value="">Sort</option>
+                <option value="sort_low">Price: Low → High</option>
+                <option value="sort_high">Price: High → Low</option>
+            </select>
+
+            <button type="submit" class="btn btn-warning w-100 w-md-auto">Search</button>
+        </form>
+    </div>
+
+    <!-- =========================
+         HOTEL GRID LISTING
+    ========================== -->
+    <div class="row">
+        {% for hotel in hotels %}
+        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-4">
+
+            <div class="card hotel-card shadow-sm">
+
+                <!-- HOTEL IMAGE -->
+                {% if hotel.hotel_images.first %}
+                    <img src="/media/{{ hotel.hotel_images.first.image }}" class="hotel-img" alt="Hotel">
+                {% else %}
+                    <img src="https://t4.ftcdn.net/jpg/04/70/29/97/360_F_470299797_UD0eoVMMSUbHCcNJCdv2t8B2g1GVqYgs.jpg" class="hotel-img" alt="Default Image">
+                {% endif %}
+
+                <div class="card-body">
+
+                    <!-- HOTEL NAME -->
+                    <h5 class="card-title fw-bold">{{ hotel.hotel_name }}</h5>
+
+                    <!-- LOCATION -->
+                    <p class="text-muted mb-2">
+                        <i class="fa-solid fa-location-dot text-danger"></i>
+                        {{ hotel.hotel_location }}
+                    </p>
+
+                    <!-- PRICE -->
+                    <div class="price-box mb-2">
+                        <span class="badge text-bg-danger">₹{{ hotel.hotel_price }}</span>
+                        <span class="badge text-bg-success">₹{{ hotel.hotel_offer_price }}</span>
+                    </div>
+
+                    <!-- AMENITIES (Example Only) -->
+                    <span class="badge bg-primary">AC</span>
+                    <span class="badge bg-primary">Swimming Pool</span>
+
+                </div>
+
+                <!-- VIEW DETAILS BUTTON -->
+                <a href="{% url 'hotel_details' hotel.hotel_slug %}" 
+                   class="btn btn-danger m-2 rounded-pill">
+                    View Details
+                </a>
+            </div>
+
+        </div>
+        {% empty %}
+        <div class="text-center mt-5">
+            <h4>No hotels found 😕</h4>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+{% endblock %}

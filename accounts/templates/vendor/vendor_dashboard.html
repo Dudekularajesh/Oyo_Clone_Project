@@ -1,0 +1,82 @@
+{% extends "utils/vendor_base.html" %}
+
+{% block start %}
+
+<div class="container mt-5">
+
+    <!-- Add Hotel Button -->
+    <div class="text-center mb-4">
+        <a href="{% url 'add_hotel' %}" class="btn btn-success px-4 py-2 fw-bold">
+            + Add Hotel
+        </a>
+    </div>
+
+    <div class="row g-4">
+
+        {% for hotel in hotels %}
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <!-- Hotel Image -->
+                <img 
+                    src="/media/{{ hotel.hotel_images.first.image }}" 
+                    class="card-img-top img-fluid"
+                    style="height: 200px; object-fit: cover;"
+                    alt="{{ hotel.hotel_name }}"
+                >
+
+                <div class="card-body d-flex flex-column">
+
+                    <!-- Name -->
+                    <h5 class="card-title text-dark fw-semibold">
+                        {{ hotel.hotel_name }}
+                    </h5>
+
+                    <!-- Description -->
+                    <p class="card-text small text-muted">
+                        {{ hotel.hotel_description|safe }}
+                    </p>
+
+                    <!-- Amenities -->
+                    <div class="mb-2">
+                        {% for amenetie in hotel.ameneties.all %}
+                        <span class="badge bg-primary mb-1">{{ amenetie.name }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Prices -->
+                    <div class="mt-auto">
+                        <p class="fw-bold mb-1">
+                            Price: ₹{{ hotel.hotel_offer_price }}
+                            <small class="text-danger text-decoration-line-through">
+                                ₹{{ hotel.hotel_price }}
+                            </small>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="card-footer bg-white border-0 pb-3 d-flex justify-content-between">
+
+                    <a href="{% url 'upload_images' hotel.hotel_slug %}" 
+                       class="btn btn-outline-success btn-sm">
+                        Images
+                    </a>
+
+                    <a href="{% url 'edit_hotel' hotel.hotel_slug %}" 
+                       class="btn btn-outline-warning btn-sm">
+                        Edit
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

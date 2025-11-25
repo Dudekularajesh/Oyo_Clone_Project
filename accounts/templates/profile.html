@@ -1,0 +1,124 @@
+{% extends "utils/base.html" %}
+{% block start %}
+{% load static %}
+
+<style>
+    .booking-card {
+        border-radius: 12px;
+        border: none;
+        background: #ffffff;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    .booking-card h5 {
+        font-weight: 600;
+    }
+    .badge-status {
+        font-size: 0.9rem;
+        padding: 6px 10px;
+        border-radius: 6px;
+    }
+    @media (max-width: 768px) {
+        .booking-card {
+            padding: 15px;
+        }
+        h2, h4 {
+            text-align: center;
+        }
+    }
+</style>
+
+<div class="container mt-4">
+
+    <h2>Hello, {{ request.user.first_name }} {{ request.user.last_name }} 👋</h2>
+    <p class="text-muted mb-4">Here are your recent bookings and payments.</p>
+
+    {% if bookings %}
+        {% for b in bookings %}
+        <div class="booking-card">
+
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <h5>{{ b.hotel.hotel_name }}</h5>
+
+                <!-- Status -->
+                {% if b.payment %}
+                    <span class="badge bg-success badge-status">
+                        Payment Completed
+                    </span>
+                {% else %}
+                    <span class="badge bg-warning text-dark badge-status">
+                        Payment Pending
+                    </span>
+                {% endif %}
+            </div>
+
+            <hr>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Check-in:</strong>
+                        {% if b.check_in %}
+                            {{ b.check_in|date:"d M Y" }}
+                        {% else %}
+                            <span class="text-muted">Not set</span>
+                        {% endif %}
+                    </p>
+
+                    <p><strong>Check-out:</strong>
+                        {% if b.check_out %}
+                            {{ b.check_out|date:"d M Y" }}
+                        {% else %}
+                            <span class="text-muted">Not set</span>
+                        {% endif %}
+                    </p>
+
+                    <p><strong>Days Stayed:</strong> {{ b.number_of_days }} Days</p>
+                </div>
+
+                <div class="col-md-6">
+                    <p><strong>Booked At:</strong> {{ b.booking_date|date:"d M Y, h:i A" }}</p>
+
+                    <p><strong>Exit Time:</strong>
+                        {% if b.exit_time %}
+                            {{ b.exit_time|date:"d M Y, h:i A" }}
+                        {% else %}
+                            <span class="text-muted">Not recorded</span>
+                        {% endif %}
+                    </p>
+
+                    <p><strong>Total Price:</strong> ₹{{ b.total_price }}</p>
+                </div>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2 mt-3">
+
+                <!-- Payment Button -->
+                {% if not b.payment %}
+                <form action="{% url 'make_payment' b.id %}" method="POST">
+                    {% csrf_token %}
+                    <button class="btn btn-success btn-sm">Pay Now</button>
+                </form>
+                {% endif %}
+
+                <!-- Delete Booking -->
+                <a href="{% url 'delete_booking' b.id %}"
+                   class="btn btn-danger btn-sm"
+                   onclick="return confirm('Are you sure to delete this booking?')">
+                    Delete Booking
+                </a>
+
+            </div>
+
+        </div>
+        {% endfor %}
+
+    {% else %}
+        <div class="alert alert-info text-center">
+            No bookings found.
+        </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}
